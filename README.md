@@ -140,8 +140,10 @@ The handler reads from the configured `weather_current` source and, when present
 
 BUC is intended to work as part of a broader stack.
 
-- panel firmware client
-- Home Assistant package and configuration layer
+- [Brockian-Ultra-Cricket-panel](https://github.com/chaoticvoltlabs/Brockian-Ultra-Cricket-panel)
+  - embedded panel firmware client
+- [Brockian-Ultra-Cricket-homeassistant](https://github.com/chaoticvoltlabs/Brockian-Ultra-Cricket-homeassistant)
+  - Home Assistant package and configuration layer
 - additional technical notes in the `docs/` folder
 
 ## In one sentence
