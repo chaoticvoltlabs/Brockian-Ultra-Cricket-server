@@ -1,0 +1,7 @@
+{
+  "device_types": {
+    "panel_4_3": {
+      "family": "embedded_panel"
+    }
+  }
+}

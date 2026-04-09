@@ -1,0 +1,343 @@
+{
+  "components": {
+    "outside_summary_main": {
+      "type": "outside_summary",
+      "source": "weather_current",
+      "options": {
+        "temperature_color_mode": "actual",
+        "temperature_color_scale": "comfort_default",
+        "wind_unit": "bft",
+        "show_precip": true,
+        "show_pressure": true,
+        "show_humidity": true,
+        "show_wind_compass": true,
+        "show_updated_at": false,
+        "layout_variant": "hero_split"
+      }
+    },
+    "indoor_grid_main": {
+      "type": "indoor_grid",
+      "source": "indoor_payload",
+      "options": {
+        "page": 1,
+        "columns": 4,
+        "rows": 4,
+        "show_empty_cells": true,
+        "temperature_decimals": 1,
+        "humidity_decimals": 0,
+        "style_variant": "panel"
+      }
+    },
+    "climate_overview_main": {
+      "type": "climate_overview",
+      "source": "indoor_payload",
+      "options": {
+        "temperature_decimals": 1,
+        "humidity_decimals": 0,
+        "style_variant": "panel"
+      }
+    },
+    "outside_summary_waveshare_anchor": {
+      "type": "outside_summary",
+      "source": "weather_current",
+      "options": {
+        "temperature_color_mode": "actual",
+        "temperature_color_scale": "comfort_default",
+        "wind_unit": "bft",
+        "show_pressure": true,
+        "show_humidity": true,
+        "show_wind_compass": true,
+        "layout_variant": "waveshare_anchor"
+      }
+    },
+    "outside_summary_waveshare_anchor_v3": {
+      "type": "outside_summary",
+      "source": "weather_current",
+      "options": {
+        "temperature_color_mode": "actual",
+        "temperature_color_scale": "comfort_default",
+        "wind_unit": "bft",
+        "show_pressure": true,
+        "show_humidity": true,
+        "show_wind_compass": true,
+        "layout_variant": "waveshare_anchor_v3"
+      }
+    },
+    "waveshare_room_controls": {
+      "type": "mock_button_group",
+      "options": {
+        "title": "Living Room",
+        "buttons": [
+          "Ceiling",
+          "Reading",
+          "Evening",
+          "All Off"
+        ]
+      }
+    },
+    "waveshare_room_controls_compact": {
+      "type": "mock_button_group",
+      "options": {
+        "hide_title": true,
+        "buttons": [
+          "Ceiling",
+          "Reading",
+          "Evening",
+          "All Off"
+        ]
+      }
+    },
+    "climate_overview_waveshare_matrix": {
+      "type": "climate_overview",
+      "source": "indoor_payload",
+      "options": {
+        "temperature_decimals": 1,
+        "humidity_decimals": 0,
+        "layout_variant": "waveshare_matrix",
+        "rows": [
+          {
+            "id": "upper",
+            "label": "Upper floor",
+            "rooms": [
+              { "key": "office", "label": "Office" },
+              { "key": "bathroom", "label": "Bathroom" },
+              { "key": "bedroom", "label": "Bedroom" },
+              { "key": "wardrobe", "label": "Wardrobe" }
+            ]
+          },
+          {
+            "id": "ground",
+            "label": "Main floor",
+            "rooms": [
+              { "key": "kitchen", "label": "Kitchen" },
+              { "key": "living", "label": "Living room" },
+              { "key": "library", "label": "Library" },
+              { "key": "sunroom", "label": "Sunroom" }
+            ]
+          },
+          {
+            "id": "basement",
+            "label": "Lower level",
+            "rooms": [
+              { "key": "servers", "label": "Servers" },
+              { "key": "laundry", "label": "Laundry" },
+              { "key": "utility", "label": "Utility" },
+              { "key": "studio", "label": "Studio" }
+            ]
+          }
+        ]
+      }
+    },
+    "climate_overview_waveshare_matrix_v2": {
+      "type": "climate_overview",
+      "source": "indoor_payload",
+      "options": {
+        "temperature_decimals": 1,
+        "humidity_decimals": 0,
+        "layout_variant": "waveshare_matrix_v2",
+        "rows": [
+          {
+            "id": "upper",
+            "label": "Upper floor",
+            "rooms": [
+              { "key": "office", "label": "Office" },
+              { "key": "bathroom", "label": "Bathroom" },
+              { "key": "bedroom", "label": "Bedroom" },
+              { "key": "wardrobe", "label": "Wardrobe" }
+            ]
+          },
+          {
+            "id": "ground",
+            "label": "Main floor",
+            "rooms": [
+              { "key": "kitchen", "label": "Kitchen" },
+              { "key": "living", "label": "Living room" },
+              { "key": "library", "label": "Library" },
+              { "key": "sunroom", "label": "Sunroom" }
+            ]
+          },
+          {
+            "id": "basement",
+            "label": "Lower level",
+            "rooms": [
+              { "key": "servers", "label": "Servers" },
+              { "key": "laundry", "label": "Laundry" },
+              { "key": "utility", "label": "Utility" },
+              { "key": "studio", "label": "Studio" }
+            ]
+          }
+        ]
+      }
+    },
+    "climate_overview_waveshare_matrix_v3": {
+      "type": "climate_overview",
+      "source": "indoor_payload",
+      "options": {
+        "temperature_decimals": 1,
+        "humidity_decimals": 0,
+        "layout_variant": "waveshare_matrix_v3",
+        "title": "House Zones",
+        "hide_eyebrow": true,
+        "rows": [
+          {
+            "id": "upper",
+            "label": "Upper floor",
+            "rooms": [
+              { "key": "office", "label": "Office" },
+              { "key": "bathroom", "label": "Bathroom" },
+              { "key": "bedroom", "label": "Bedroom" },
+              { "key": "wardrobe", "label": "Wardrobe" }
+            ]
+          },
+          {
+            "id": "ground",
+            "label": "Main floor",
+            "rooms": [
+              { "key": "kitchen", "label": "Kitchen" },
+              { "key": "living", "label": "Living room" },
+              { "key": "library", "label": "Library" },
+              { "key": "sunroom", "label": "Sunroom" }
+            ]
+          },
+          {
+            "id": "basement",
+            "label": "Lower level",
+            "rooms": [
+              { "key": "servers", "label": "Servers" },
+              { "key": "laundry", "label": "Laundry" },
+              { "key": "utility", "label": "Utility" },
+              { "key": "studio", "label": "Studio" }
+            ]
+          }
+        ]
+      }
+    },
+    "climate_overview_waveshare_matrix_v4": {
+      "type": "climate_overview",
+      "source": "indoor_payload",
+      "options": {
+        "temperature_decimals": 1,
+        "humidity_decimals": 0,
+        "layout_variant": "waveshare_matrix_v4",
+        "title": "House Zones",
+        "hide_eyebrow": true,
+        "rows": [
+          {
+            "id": "upper",
+            "label": "Upper floor",
+            "rooms": [
+              { "key": "office", "label": "Office" },
+              { "key": "bathroom", "label": "Bathroom" },
+              { "key": "bedroom", "label": "Bedroom" },
+              { "key": "wardrobe", "label": "Wardrobe" }
+            ]
+          },
+          {
+            "id": "ground",
+            "label": "Main floor",
+            "rooms": [
+              { "key": "kitchen", "label": "Kitchen" },
+              { "key": "living", "label": "Living room" },
+              { "key": "library", "label": "Library" },
+              { "key": "sunroom", "label": "Sunroom" }
+            ]
+          },
+          {
+            "id": "basement",
+            "label": "Lower level",
+            "rooms": [
+              { "key": "servers", "label": "Servers" },
+              { "key": "laundry", "label": "Laundry" },
+              { "key": "utility", "label": "Utility" },
+              { "key": "studio", "label": "Studio" }
+            ]
+          }
+        ]
+      }
+    },
+    "wind_gust_mini_waveshare": {
+      "type": "wind_gust_mini",
+      "source": "weather_hourly",
+      "options": {
+        "title": "24h wind gusts",
+        "hours": 24,
+        "pairs": 12,
+        "unit": "bft"
+      }
+    },
+    "wind_gust_mini_waveshare_48h": {
+      "type": "wind_gust_mini",
+      "source": "weather_hourly",
+      "options": {
+        "title": "48h gusts",
+        "hours": 48,
+        "pairs": 24,
+        "unit": "bft"
+      }
+    },
+    "wind_strip_main": {
+      "type": "wind_strip",
+      "source": "weather_hourly",
+      "options": {
+        "hours": 48,
+        "mode": "gusts",
+        "unit": "bft",
+        "show_direction": true,
+        "show_hour": true,
+        "show_numeric_secondary": false,
+        "style_variant": "panel"
+      }
+    },
+    "daily_forecast_main": {
+      "type": "daily_forecast",
+      "source": "weather_daily",
+      "options": {
+        "days": 4,
+        "wind_mode": "gust_max",
+        "wind_unit": "bft",
+        "show_precip_probability": true,
+        "show_direction": false,
+        "show_day_label": true,
+        "style_variant": "cards"
+      }
+    },
+    "map_panel_main": {
+      "type": "map_panel",
+      "source": "overview_payload",
+      "options": {
+        "mode": "static_asset",
+        "fit": "contain",
+        "show_location_marker": true,
+        "overlay": "none",
+        "style_variant": "panel"
+      }
+    },
+    "windy_embed_wind": {
+      "type": "web_embed",
+      "options": {
+        "title": "Windkaart",
+        "provider": "windy",
+        "embed_type": "iframe",
+        "variant": "wind",
+        "url": "https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=mm&metricTemp=%C2%B0C&metricWind=bft&zoom=5&overlay=wind&product=ecmwf&level=surface&lat=56.45964946031108&lon=13.633502826328698&pressure=true&message=true"
+      }
+    },
+    "windy_embed_rain": {
+      "type": "web_embed",
+      "options": {
+        "title": "Neerslagkaart",
+        "provider": "windy",
+        "embed_type": "iframe",
+        "variant": "rain",
+        "url": "https://embed.windy.com/embed.html?type=map&location=coordinates&metricRain=mm&metricTemp=%C2%B0C&metricWind=bft&zoom=5&overlay=rain&product=ecmwf&level=surface&lat=56.45964946031108&lon=13.633502826328698&pressure=true&message=true"
+      }
+    },
+    "wind_compass_test": {
+      "type": "wind_compass",
+      "source": "weather_current",
+      "options": {
+        "title": "Windroos"
+      }
+    }
+  }
+}

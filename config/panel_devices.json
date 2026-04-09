@@ -1,0 +1,19 @@
+{
+  "default": "panel_alpha",
+  "devices": {
+    "panel_alpha": {
+      "identity": {
+        "mac": "aa:bb:cc:dd:ee:ff"
+      },
+      "device_type": "panel_4_3",
+      "profile": "room_alpha"
+    },
+    "panel_beta": {
+      "identity": {
+        "mac": "11:22:33:44:55:66"
+      },
+      "device_type": "panel_4_3",
+      "profile": "room_beta"
+    }
+  }
+}

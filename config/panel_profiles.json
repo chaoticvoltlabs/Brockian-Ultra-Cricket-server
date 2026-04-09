@@ -1,0 +1,110 @@
+{
+  "profiles": {
+    "room_alpha": {
+      "page3": {
+        "scenes": [
+          {
+            "label": "Work",
+            "target": "scene_work",
+            "action": "activate"
+          },
+          {
+            "label": "Evening",
+            "target": "scene_evening",
+            "action": "activate"
+          },
+          {
+            "label": "Movie",
+            "target": "scene_movie",
+            "action": "activate"
+          },
+          {
+            "label": "Night",
+            "target": "scene_night",
+            "action": "activate"
+          }
+        ],
+        "targets": [
+          {
+            "label": "Light A",
+            "target": "light_a",
+            "action": "toggle"
+          },
+          {
+            "label": "Light B",
+            "target": "light_b",
+            "action": "toggle"
+          },
+          {
+            "label": "Light C",
+            "target": "light_c",
+            "action": "toggle"
+          },
+          {
+            "label": "Media",
+            "target": "media_power",
+            "action": "toggle"
+          }
+        ],
+        "long_press": {
+          "label": "Night",
+          "target": "scene_night",
+          "action": "activate"
+        }
+      }
+    },
+    "room_beta": {
+      "page3": {
+        "scenes": [
+          {
+            "label": "Bright",
+            "target": "scene_bright",
+            "action": "activate"
+          },
+          {
+            "label": "Focus",
+            "target": "scene_focus",
+            "action": "activate"
+          },
+          {
+            "label": "Night",
+            "target": "scene_night",
+            "action": "activate"
+          }
+        ],
+        "targets": [
+          {
+            "label": "Counter",
+            "target": "task_light",
+            "action": "toggle"
+          },
+          {
+            "label": "Accent",
+            "target": "accent_light",
+            "action": "toggle"
+          },
+          {
+            "label": "Ceiling",
+            "target": "ceiling_light",
+            "action": "toggle"
+          },
+          {
+            "label": "Media",
+            "target": "media_power",
+            "action": "toggle"
+          },
+          {
+            "label": "Aux Light",
+            "target": "aux_light",
+            "action": "toggle"
+          }
+        ],
+        "long_press": {
+          "label": "Night",
+          "target": "scene_night",
+          "action": "activate"
+        }
+      }
+    }
+  }
+}

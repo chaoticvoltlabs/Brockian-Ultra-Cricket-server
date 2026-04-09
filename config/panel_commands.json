@@ -1,0 +1,74 @@
+{
+  "commands": {
+    "light_a:toggle": {
+      "domain": "light",
+      "service": "toggle",
+      "entity_id": "light.room_light_a"
+    },
+    "light_b:toggle": {
+      "domain": "switch",
+      "service": "toggle",
+      "entity_id": "switch.room_light_b"
+    },
+    "light_c:toggle": {
+      "domain": "light",
+      "service": "toggle",
+      "entity_id": "light.room_light_c"
+    },
+    "media_power:toggle": {
+      "domain": "switch",
+      "service": "toggle",
+      "entity_id": "switch.media_power"
+    },
+    "aux_light:toggle": {
+      "domain": "light",
+      "service": "toggle",
+      "entity_id": "light.aux_light"
+    },
+    "task_light:toggle": {
+      "domain": "light",
+      "service": "toggle",
+      "entity_id": "light.task_light"
+    },
+    "accent_light:toggle": {
+      "domain": "switch",
+      "service": "toggle",
+      "entity_id": "switch.accent_light"
+    },
+    "ceiling_light:toggle": {
+      "domain": "light",
+      "service": "toggle",
+      "entity_id": "light.ceiling_light"
+    },
+    "scene_work:activate": {
+      "domain": "scene",
+      "service": "turn_on",
+      "entity_id": "scene.room_work"
+    },
+    "scene_evening:activate": {
+      "domain": "scene",
+      "service": "turn_on",
+      "entity_id": "scene.room_evening"
+    },
+    "scene_movie:activate": {
+      "domain": "scene",
+      "service": "turn_on",
+      "entity_id": "scene.room_movie"
+    },
+    "scene_night:activate": {
+      "domain": "scene",
+      "service": "turn_on",
+      "entity_id": "scene.room_night"
+    },
+    "scene_bright:activate": {
+      "domain": "scene",
+      "service": "turn_on",
+      "entity_id": "scene.room_bright"
+    },
+    "scene_focus:activate": {
+      "domain": "scene",
+      "service": "turn_on",
+      "entity_id": "scene.room_focus"
+    }
+  }
+}

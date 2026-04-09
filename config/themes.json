@@ -1,0 +1,70 @@
+{
+  "themes": {
+    "dark_default": {
+      "tokens": {
+        "surface_1": "#243248",
+        "surface_2": "#2f3b52",
+        "text_primary": "#ffffff",
+        "text_secondary": "#e7edf5",
+        "border_soft": "rgba(255,255,255,0.06)",
+        "temp_cold_1": "#7cc7ff",
+        "temp_cold_2": "#9ed8ff",
+        "temp_cool": "#8fe3c2",
+        "temp_comfort": "#7cf29a",
+        "temp_warm": "#e9d66b",
+        "temp_hot": "#d9a066",
+        "temp_very_hot": "#cf7b63",
+        "wind_good": "#7cf29a",
+        "wind_warn": "#e9d66b",
+        "wind_alert": "#d9a066",
+        "wind_danger": "#cf7b63"
+      },
+      "temperature_scales": {
+        "comfort_default": {
+          "bands": [
+            { "max": 0, "token": "temp_cold_1" },
+            { "max": 7, "token": "temp_cold_2" },
+            { "max": 14, "token": "temp_cool" },
+            { "max": 21, "token": "temp_comfort" },
+            { "max": 26, "token": "temp_warm" },
+            { "max": 31, "token": "temp_hot" },
+            { "max": 999, "token": "temp_very_hot" }
+          ]
+        }
+      }
+    },
+    "light_default": {
+      "tokens": {
+        "surface_1": "#f5f7fb",
+        "surface_2": "#e8edf5",
+        "text_primary": "#1d2a3a",
+        "text_secondary": "#44576d",
+        "border_soft": "rgba(29,42,58,0.10)",
+        "temp_cold_1": "#3f8fd6",
+        "temp_cold_2": "#5da7db",
+        "temp_cool": "#4da88a",
+        "temp_comfort": "#3c9b5f",
+        "temp_warm": "#b89a2e",
+        "temp_hot": "#b87634",
+        "temp_very_hot": "#b65b45",
+        "wind_good": "#3c9b5f",
+        "wind_warn": "#b89a2e",
+        "wind_alert": "#b87634",
+        "wind_danger": "#b65b45"
+      },
+      "temperature_scales": {
+        "comfort_default": {
+          "bands": [
+            { "max": 0, "token": "temp_cold_1" },
+            { "max": 7, "token": "temp_cold_2" },
+            { "max": 14, "token": "temp_cool" },
+            { "max": 21, "token": "temp_comfort" },
+            { "max": 26, "token": "temp_warm" },
+            { "max": 31, "token": "temp_hot" },
+            { "max": 999, "token": "temp_very_hot" }
+          ]
+        }
+      }
+    }
+  }
+}

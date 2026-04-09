@@ -1,0 +1,34 @@
+# Binaries
+bin/
+dist/
+build/
+
+# Runtime / local state
+var/
+tmp/
+*.log
+local_docs/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS / editor junk
+.DS_Store
+._*
+Thumbs.db
+
+# Local env / secrets
+.env
+.env.*
+*.local
+.ssh/
+
+# IDEs
+.vscode/
+.idea/
+AGENTS.md
+
+# Generated caches
+.cache/
+
