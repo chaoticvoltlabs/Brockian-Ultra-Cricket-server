@@ -154,3 +154,12 @@ BUC is intended to work as part of a broader stack.
 BUC is currently not designed as a hardened public internet frontend.
 It does not provide built-in authentication, authorization, or secure remote access features.
 If you use BUC outside a trusted local environment, place it behind appropriate access controls such as a VPN, reverse proxy, authentication layer, or other protective infrastructure.
+
+## Copyright & license
+
+PolyForm Noncommercial License 1.0.0
+with Commercial Use by Explicit Permission Only
+See LICENSE.txt
+
+
+Copyright (c) 2026 Robin Kluit / Chaoticvolt.
