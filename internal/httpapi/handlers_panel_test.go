@@ -37,6 +37,7 @@ func TestPanelWeatherHandler(t *testing.T) {
 			_ = json.NewEncoder(w).Encode(map[string]interface{}{
 				"entity_id": "sensor.panel_overview_payload",
 				"attributes": map[string]interface{}{
+					"night_mode": true,
 					"weather_meta": map[string]interface{}{
 						"pressure_trend_24h": "1002.0, 1001.4, 1001.4, 1000.8, invalid, 999.1, 998.5",
 					},
@@ -63,6 +64,39 @@ func TestPanelWeatherHandler(t *testing.T) {
 					},
 				},
 			})
+		case "/api/states/light.room_light_a":
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
+				"entity_id": "light.room_light_a",
+				"state":     "on",
+				"attributes": map[string]interface{}{},
+			})
+		case "/api/states/switch.room_light_b":
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
+				"entity_id": "switch.room_light_b",
+				"state":     "off",
+				"attributes": map[string]interface{}{},
+			})
+		case "/api/states/light.room_light_c":
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
+				"entity_id": "light.room_light_c",
+				"state":     "unavailable",
+				"attributes": map[string]interface{}{},
+			})
+		case "/api/states/switch.media_power":
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
+				"entity_id": "switch.media_power",
+				"state":     "off",
+				"attributes": map[string]interface{}{},
+			})
+		case "/api/states/light.room_ambient":
+			_ = json.NewEncoder(w).Encode(map[string]interface{}{
+				"entity_id": "light.room_ambient",
+				"state":     "on",
+				"attributes": map[string]interface{}{
+					"brightness": 191,
+					"rgb_color":  []interface{}{255, 136, 32},
+				},
+			})
 		default:
 			http.NotFound(w, r)
 		}
@@ -83,6 +117,58 @@ func TestPanelWeatherHandler(t *testing.T) {
 				"indoor_payload": {
 					Type:     "ha_entity",
 					EntityID: "sensor.panel_indoor_payload",
+				},
+			},
+		},
+		PanelDevices: config.PanelDevicesFile{
+			Default: "room_alpha",
+			Devices: map[string]config.PanelDeviceConfig{
+				"room_alpha": {
+					DeviceType: "panel_4_3",
+					Profile:    "room_alpha",
+				},
+			},
+		},
+		PanelProfiles: config.PanelProfilesFile{
+			Profiles: map[string]config.PanelProfileConfig{
+				"room_alpha": {
+					Page3: config.PanelProfilePage3Config{
+						Targets: []config.PanelSlotConfig{
+							{Label: "Light A", Target: "light_a", Action: "toggle"},
+							{Label: "Light B", Target: "light_b", Action: "toggle"},
+							{Label: "Light C", Target: "light_c", Action: "toggle"},
+							{Label: "Media", Target: "media_power", Action: "toggle"},
+						},
+					},
+				},
+			},
+		},
+		PanelCommands: config.PanelCommandsFile{
+			Commands: map[string]config.PanelCommandConfig{
+				"light_a:toggle": {
+					Domain:   "light",
+					Service:  "toggle",
+					EntityID: "light.room_light_a",
+				},
+				"light_b:toggle": {
+					Domain:   "switch",
+					Service:  "toggle",
+					EntityID: "switch.room_light_b",
+				},
+				"light_c:toggle": {
+					Domain:   "light",
+					Service:  "toggle",
+					EntityID: "light.room_light_c",
+				},
+				"media_power:toggle": {
+					Domain:   "switch",
+					Service:  "toggle",
+					EntityID: "switch.media_power",
+				},
+				"ambient:toggle": {
+					Domain:   "light",
+					Service:  "toggle",
+					EntityID: "light.room_ambient",
 				},
 			},
 		},
@@ -120,6 +206,27 @@ func TestPanelWeatherHandler(t *testing.T) {
 
 	if len(resp.IndoorZones) != 12 {
 		t.Fatalf("expected 12 indoor zones, got %d", len(resp.IndoorZones))
+	}
+	if !resp.NightMode {
+		t.Fatalf("expected night_mode true, got %#v", resp.NightMode)
+	}
+	if resp.AmbientBrightnessPct == nil || *resp.AmbientBrightnessPct != 75 {
+		t.Fatalf("expected ambient brightness 75, got %#v", resp.AmbientBrightnessPct)
+	}
+	if len(resp.AmbientRGB) != 3 || resp.AmbientRGB[0] != 255 || resp.AmbientRGB[1] != 136 || resp.AmbientRGB[2] != 32 {
+		t.Fatalf("unexpected ambient rgb: %#v", resp.AmbientRGB)
+	}
+	if got := resp.Page3TargetStates["light_a"]; got != "on" {
+		t.Fatalf("expected light_a state on, got %#v", got)
+	}
+	if got := resp.Page3TargetStates["light_b"]; got != "off" {
+		t.Fatalf("expected light_b state off, got %#v", got)
+	}
+	if got := resp.Page3TargetStates["light_c"]; got != "unavailable" {
+		t.Fatalf("expected light_c state unavailable, got %#v", got)
+	}
+	if got := resp.Page3TargetStates["media_power"]; got != "off" {
+		t.Fatalf("expected media_power state off, got %#v", got)
 	}
 
 	assertIndoorZone(t, resp.IndoorZones[0], 17.1, 37)

@@ -14,17 +14,21 @@ import (
 )
 
 type panelWeatherResponse struct {
-	OutsideTempC     float64           `json:"outside_temp_c"`
-	FeelsLikeC       float64           `json:"feels_like_c"`
-	WindBft          int               `json:"wind_bft"`
-	WindKmh          int               `json:"wind_kmh"`
-	GustBft          int               `json:"gust_bft"`
-	GustKmh          int               `json:"gust_kmh"`
-	WindDirDeg       int               `json:"wind_dir_deg"`
-	HumidityPct      int               `json:"humidity_pct"`
-	PressureHPA      int               `json:"pressure_hpa"`
-	PressureTrend24h []float64         `json:"pressure_trend_24h"`
-	IndoorZones      []panelIndoorZone `json:"indoor_zones"`
+	OutsideTempC         float64           `json:"outside_temp_c"`
+	FeelsLikeC           float64           `json:"feels_like_c"`
+	WindBft              int               `json:"wind_bft"`
+	WindKmh              int               `json:"wind_kmh"`
+	GustBft              int               `json:"gust_bft"`
+	GustKmh              int               `json:"gust_kmh"`
+	WindDirDeg           int               `json:"wind_dir_deg"`
+	HumidityPct          int               `json:"humidity_pct"`
+	PressureHPA          int               `json:"pressure_hpa"`
+	PressureTrend24h     []float64         `json:"pressure_trend_24h"`
+	NightMode            bool              `json:"night_mode"`
+	IndoorZones          []panelIndoorZone `json:"indoor_zones"`
+	AmbientBrightnessPct *int              `json:"ambient_brightness_pct,omitempty"`
+	AmbientRGB           []int             `json:"ambient_rgb,omitempty"`
+	Page3TargetStates    map[string]string `json:"page3_target_states,omitempty"`
 }
 
 type panelIndoorZone struct {
@@ -58,7 +62,7 @@ var panelIndoorZoneOrder = []string{
 
 func PanelWeatherHandler(a *app.App) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		recordPanelRequest(r)
+		info := recordPanelRequest(r)
 
 		if a == nil || a.HAClient == nil {
 			support.JSON(w, http.StatusServiceUnavailable, map[string]interface{}{
@@ -106,6 +110,7 @@ func PanelWeatherHandler(a *app.App) http.HandlerFunc {
 				if values := extractPressureTrend24h(overviewSource.Data); len(values) > 0 {
 					resp.PressureTrend24h = values
 				}
+				resp.NightMode = extractBool(overviewSource.Data, "night_mode")
 			}
 			if len(resp.PressureTrend24h) == 0 {
 				if values := extractPressureTrend24hFromEntity(overviewEntity); len(values) > 0 {
@@ -119,8 +124,135 @@ func PanelWeatherHandler(a *app.App) http.HandlerFunc {
 			resp.IndoorZones = extractIndoorZonesFromEntity(indoorEntity, panelIndoorPage, panelIndoorRows, panelIndoorCols)
 		}
 
+		profile, _, _ := panelProfileForRequest(a, info.PanelMAC)
+		if states := resolvePanelTargetStates(a, profile.Page3.Targets); len(states) > 0 {
+			resp.Page3TargetStates = states
+		}
+		if brightnessPct, rgb, ok := resolveAmbientState(a, "ambient"); ok {
+			resp.AmbientBrightnessPct = brightnessPct
+			resp.AmbientRGB = rgb
+		}
+
 		support.JSON(w, http.StatusOK, resp)
 	}
+}
+
+func resolvePanelTargetStates(a *app.App, slots []panelConfigSlot) map[string]string {
+	if a == nil || a.Config == nil || a.HAClient == nil || len(slots) == 0 {
+		return nil
+	}
+
+	out := make(map[string]string, len(slots))
+	for _, slot := range slots {
+		target := strings.TrimSpace(slot.Target)
+		action := strings.TrimSpace(slot.Action)
+		if target == "" || action == "" {
+			continue
+		}
+
+		key := target + ":" + action
+		cmd, ok := a.Config.PanelCommands.Commands[key]
+		if !ok || strings.TrimSpace(cmd.EntityID) == "" {
+			out[target] = "unavailable"
+			continue
+		}
+
+		if strings.EqualFold(strings.TrimSpace(cmd.Domain), "scene") {
+			out[target] = "unavailable"
+			continue
+		}
+
+		entity, err := a.HAClient.GetState(cmd.EntityID)
+		if err != nil || entity == nil {
+			out[target] = "unavailable"
+			continue
+		}
+
+		switch strings.ToLower(strings.TrimSpace(entity.State)) {
+		case "on":
+			out[target] = "on"
+		case "off":
+			out[target] = "off"
+		default:
+			out[target] = "unavailable"
+		}
+	}
+
+	return out
+}
+
+func resolveAmbientState(a *app.App, target string) (*int, []int, bool) {
+	if a == nil || a.Config == nil || a.HAClient == nil {
+		return nil, nil, false
+	}
+
+	entityID := commandEntityIDForTarget(a.Config, target)
+	if strings.TrimSpace(entityID) == "" {
+		return nil, nil, false
+	}
+
+	entity, err := a.HAClient.GetState(entityID)
+	if err != nil || entity == nil {
+		return nil, nil, false
+	}
+
+	norm := ha.NormalizeEntity(entity)
+	if norm == nil {
+		return nil, nil, false
+	}
+
+	var brightnessPct *int
+	if v, ok := support.ToFloat(norm.Attributes["brightness"]); ok {
+		pct := int(math.Round((v / 255.0) * 100.0))
+		if pct < 0 {
+			pct = 0
+		}
+		if pct > 100 {
+			pct = 100
+		}
+		brightnessPct = &pct
+	}
+
+	rgb := parseRGBColor(norm.Attributes["rgb_color"])
+	return brightnessPct, rgb, brightnessPct != nil || len(rgb) == 3
+}
+
+func commandEntityIDForTarget(cfg *config.AllConfig, target string) string {
+	if cfg == nil || strings.TrimSpace(target) == "" {
+		return ""
+	}
+
+	for _, action := range []string{"toggle", "set_brightness", "set_rgb", "activate"} {
+		key := target + ":" + action
+		if cmd, ok := cfg.PanelCommands.Commands[key]; ok && strings.TrimSpace(cmd.EntityID) != "" {
+			return cmd.EntityID
+		}
+	}
+	return ""
+}
+
+func parseRGBColor(raw interface{}) []int {
+	items, ok := raw.([]interface{})
+	if !ok || len(items) != 3 {
+		return nil
+	}
+
+	rgb := make([]int, 3)
+	for i, item := range items {
+		v, ok := support.ToFloat(item)
+		if !ok {
+			return nil
+		}
+		n := int(math.Round(v))
+		if n < 0 {
+			n = 0
+		}
+		if n > 255 {
+			n = 255
+		}
+		rgb[i] = n
+	}
+	return rgb
 }
 
 func sourceEntityID(cfg *config.AllConfig, sourceName string, fallback string) string {
@@ -146,6 +278,25 @@ func extractRoundedInt(data map[string]interface{}, key string) int {
 		return int(math.Round(v))
 	}
 	return 0
+}
+
+func extractBool(data map[string]interface{}, key string) bool {
+	v, ok := data[key]
+	if !ok || v == nil {
+		return false
+	}
+
+	switch x := v.(type) {
+	case bool:
+		return x
+	case string:
+		switch strings.ToLower(strings.TrimSpace(x)) {
+		case "true", "on", "yes", "1":
+			return true
+		}
+	}
+
+	return false
 }
 
 func extractPressureTrend24h(data map[string]interface{}) []float64 {

@@ -3,6 +3,7 @@ package httpapi
 import (
 	"encoding/json"
 	"log"
+	"math"
 	"net/http"
 	"strings"
 
@@ -12,13 +13,17 @@ import (
 )
 
 const (
-	panelControlActionActivate = "activate"
-	panelControlActionToggle   = "toggle"
+	panelControlActionActivate      = "activate"
+	panelControlActionToggle        = "toggle"
+	panelControlActionSetBrightness = "set_brightness"
+	panelControlActionSetRGB        = "set_rgb"
 )
 
 type panelControlRequest struct {
-	Target string `json:"target"`
-	Action string `json:"action"`
+	Target string   `json:"target"`
+	Action string   `json:"action"`
+	Value  *float64 `json:"value,omitempty"`
+	RGB    []int    `json:"rgb,omitempty"`
 }
 
 type panelControlCommand struct {
@@ -71,9 +76,18 @@ func PanelControlHandler(a *app.App) http.HandlerFunc {
 		log.Printf("panel control request target=%s action=%s -> %s.%s %s",
 			req.Target, req.Action, command.Domain, command.Service, command.EntityID)
 
-		if err := a.HAClient.CallService(command.Domain, command.Service, map[string]interface{}{
-			"entity_id": command.EntityID,
-		}); err != nil {
+		serviceData, err := panelControlServiceData(req, command)
+		if err != nil {
+			support.JSON(w, http.StatusBadRequest, map[string]interface{}{
+				"ok":     false,
+				"error":  err.Error(),
+				"target": req.Target,
+				"action": req.Action,
+			})
+			return
+		}
+
+		if err := a.HAClient.CallService(command.Domain, command.Service, serviceData); err != nil {
 			log.Printf("panel control failed target=%s action=%s err=%v", req.Target, req.Action, err)
 			support.JSON(w, http.StatusBadGateway, map[string]interface{}{
 				"ok":      false,
@@ -92,6 +106,56 @@ func PanelControlHandler(a *app.App) http.HandlerFunc {
 			"action": req.Action,
 		})
 	}
+}
+
+func panelControlServiceData(req panelControlRequest, command panelControlCommand) (map[string]interface{}, error) {
+	data := map[string]interface{}{
+		"entity_id": command.EntityID,
+	}
+
+	switch req.Action {
+	case panelControlActionSetBrightness:
+		if req.Value == nil {
+			return nil, supportError("missing value for set_brightness")
+		}
+		v := int(math.Round(*req.Value))
+		if v < 0 {
+			v = 0
+		}
+		if v > 100 {
+			v = 100
+		}
+		data["brightness_pct"] = v
+	case panelControlActionSetRGB:
+		if len(req.RGB) != 3 {
+			return nil, supportError("rgb must contain 3 values")
+		}
+		rgb := make([]int, 3)
+		for i, v := range req.RGB {
+			if v < 0 {
+				v = 0
+			}
+			if v > 255 {
+				v = 255
+			}
+			rgb[i] = v
+		}
+		data["rgb_color"] = rgb
+	}
+
+	return data, nil
+}
+
+func supportError(msg string) error {
+	return &panelControlValidationError{msg: msg}
+}
+
+type panelControlValidationError struct {
+	msg string
+}
+
+func (e *panelControlValidationError) Error() string {
+	return e.msg
 }
 
 func panelControlCommandForKey(a *app.App, key string) (panelControlCommand, bool) {

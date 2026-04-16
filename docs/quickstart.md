@@ -86,6 +86,13 @@ If you are building a compact weather panel, BUC also exposes `/api/panel/weathe
 
 That endpoint returns a reduced weather payload intended for panel use, so panel-specific frontends do not need to assemble those values client-side.
 
+Depending on the upstream entities and configured panel commands, the same endpoint can also expose:
+
+- `night_mode`
+- `page3_target_states`
+- `ambient_brightness_pct`
+- `ambient_rgb`
+
 Current panel-oriented config is split into:
 
 - `config/panel_devices.json`

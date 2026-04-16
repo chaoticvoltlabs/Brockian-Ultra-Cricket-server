@@ -48,7 +48,7 @@
 
 ## Documentation milestones
 - [ ] Keep public docs concise and useful
-- [x] Reintroduce private technical docs for the active stack
+- [x] Reintroduce practical technical docs for the active stack
 - [x] Document browser-based live log and logfile access
 - [ ] Publish installation and maintenance guidance when the framework has stabilized
 

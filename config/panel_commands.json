@@ -69,6 +69,21 @@
       "domain": "scene",
       "service": "turn_on",
       "entity_id": "scene.room_focus"
+    },
+    "ambient:toggle": {
+      "domain": "light",
+      "service": "toggle",
+      "entity_id": "light.room_ambient"
+    },
+    "ambient:set_brightness": {
+      "domain": "light",
+      "service": "turn_on",
+      "entity_id": "light.room_ambient"
+    },
+    "ambient:set_rgb": {
+      "domain": "light",
+      "service": "turn_on",
+      "entity_id": "light.room_ambient"
     }
   }
 }

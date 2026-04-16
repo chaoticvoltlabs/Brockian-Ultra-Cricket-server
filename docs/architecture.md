@@ -201,7 +201,7 @@ The intended usage is:
 - use `/log/live` while testing panels, HA integrations, or control flows
 - use `/log/files` to inspect recent hourly logs without logging into the server shell
 
-## Current Mancave command set
+## Current example command set
 
 The current command whitelist is config-driven through:
 

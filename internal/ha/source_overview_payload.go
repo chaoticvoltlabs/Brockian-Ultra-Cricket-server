@@ -16,7 +16,7 @@ func BuildOverviewPayload(name string, entity *EntityState) SourceResult {
 	res.EntityID = entity.EntityID
 	norm := NormalizeEntity(entity)
 
-	for _, k := range []string{"map_asset", "indoor", "weather", "weather_meta"} {
+	for _, k := range []string{"map_asset", "map_format", "map_version", "map_theme", "night_mode", "indoor", "weather", "weather_meta"} {
 		if v, exists := norm.Attributes[k]; exists {
 			res.Data[k] = v
 		}

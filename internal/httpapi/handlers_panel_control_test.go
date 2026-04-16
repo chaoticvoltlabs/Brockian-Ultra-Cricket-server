@@ -152,6 +152,67 @@ func TestPanelControlHandlerCallsHAWorkScene(t *testing.T) {
 		t.Fatalf("expected entity_id %q, got %#v", "scene.room_work", gotBody["entity_id"])
 	}
 }
+
+func TestPanelControlHandlerSupportsAmbientBrightness(t *testing.T) {
+	var gotBody map[string]interface{}
+
+	haServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if err := json.NewDecoder(r.Body).Decode(&gotBody); err != nil {
+			t.Fatalf("decode request body: %v", err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`[]`))
+	}))
+	defer haServer.Close()
+
+	req := httptest.NewRequest(http.MethodPost, "/api/panel/control",
+		strings.NewReader(`{"target":"ambient","action":"set_brightness","value":42}`))
+	req.Header.Set("Content-Type", "application/json")
+	rec := httptest.NewRecorder()
+
+	Router(app.New(loadTestConfig(t), ha.NewClient(haServer.URL, "test-token"))).ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d: %s", http.StatusOK, rec.Code, rec.Body.String())
+	}
+	if gotBody["entity_id"] != "light.room_ambient" {
+		t.Fatalf("expected entity_id %q, got %#v", "light.room_ambient", gotBody["entity_id"])
+	}
+	if gotBody["brightness_pct"] != float64(42) {
+		t.Fatalf("expected brightness_pct 42, got %#v", gotBody["brightness_pct"])
+	}
+}
+
+func TestPanelControlHandlerSupportsAmbientRGB(t *testing.T) {
+	var gotBody map[string]interface{}
+
+	haServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if err := json.NewDecoder(r.Body).Decode(&gotBody); err != nil {
+			t.Fatalf("decode request body: %v", err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`[]`))
+	}))
+	defer haServer.Close()
+
+	req := httptest.NewRequest(http.MethodPost, "/api/panel/control",
+		strings.NewReader(`{"target":"ambient","action":"set_rgb","rgb":[255,136,32]}`))
+	req.Header.Set("Content-Type", "application/json")
+	rec := httptest.NewRecorder()
+
+	Router(app.New(loadTestConfig(t), ha.NewClient(haServer.URL, "test-token"))).ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("expected status %d, got %d: %s", http.StatusOK, rec.Code, rec.Body.String())
+	}
+	if gotBody["entity_id"] != "light.room_ambient" {
+		t.Fatalf("expected entity_id %q, got %#v", "light.room_ambient", gotBody["entity_id"])
+	}
+	rgb, ok := gotBody["rgb_color"].([]interface{})
+	if !ok || len(rgb) != 3 {
+		t.Fatalf("expected rgb_color triplet, got %#v", gotBody["rgb_color"])
+	}
+}
 func TestPanelControlHandlerRejectsUnsupportedCommand(t *testing.T) {
 	req := httptest.NewRequest(http.MethodPost, "/api/panel/control",
 		strings.NewReader(`{"target":"other","action":"toggle"}`))

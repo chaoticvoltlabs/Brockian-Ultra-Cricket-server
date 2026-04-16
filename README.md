@@ -133,6 +133,9 @@ That endpoint is designed to provide a concise weather payload for panel renderi
 - humidity
 - pressure
 - a 24-hour pressure trend when available
+- an optional `night_mode` flag
+- optional live page-3 target states
+- optional ambient light state such as brightness and RGB
 
 The handler reads from the configured `weather_current` source and, when present, enriches the result with trend data from `overview_payload`.
 
